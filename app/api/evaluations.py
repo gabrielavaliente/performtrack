@@ -30,7 +30,7 @@ def asignar_empleados(id: int, empleados: List[str]):
 @router.get("/employees/from-minthcm")
 def obtener_empleados_de_minthcm():
     client = MintHCMClient(
-        base_url="http://localhost:8080",
+        base_url="http://localhost:80",
         username="admin",
         password="minthcm"
     )
