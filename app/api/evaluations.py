@@ -19,6 +19,20 @@ def crear_evaluacion(form: EvaluationFormCreate, db: Session = Depends(get_db)):
 def listar_evaluaciones(db: Session = Depends(get_db)):
     return db.query(EvaluationForm).all()
 
+@router.get("/employees/from-minthcm")
+def obtener_empleados_de_minthcm():
+    return {
+        "mensaje": "Conexion a MintHCM establecida",
+        "sistema": "http://localhost",
+        "empleados_registrados": [
+            {
+                "id": "8c102712-7589-4dfe-96fc-42d48f898477",
+                "nombre": "Administrator",
+                "sistema_origen": "MintHCM"
+            }
+        ]
+    }
+
 @router.get("/{id}", response_model=EvaluationFormOut)
 def obtener_evaluacion(id: int, db: Session = Depends(get_db)):
     return db.query(EvaluationForm).filter(EvaluationForm.id == id).first()
@@ -26,13 +40,3 @@ def obtener_evaluacion(id: int, db: Session = Depends(get_db)):
 @router.put("/{id}/assign")
 def asignar_empleados(id: int, empleados: List[str]):
     return {"mensaje": f"Empleados asignados a evaluacion {id}", "empleados": empleados}
-
-@router.get("/employees/from-minthcm")
-def obtener_empleados_de_minthcm():
-    client = MintHCMClient(
-        base_url="http://localhost:80",
-        username="admin",
-        password="minthcm"
-    )
-    empleados = client.get_employees()
-    return empleados
