@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.db.database import get_db, EvaluationForm
 from app.models.schemas import EvaluationFormCreate, EvaluationFormOut
+from app.services.minthcm import MintHCMClient
 from typing import List
 
 router = APIRouter()
@@ -25,3 +26,13 @@ def obtener_evaluacion(id: int, db: Session = Depends(get_db)):
 @router.put("/{id}/assign")
 def asignar_empleados(id: int, empleados: List[str]):
     return {"mensaje": f"Empleados asignados a evaluacion {id}", "empleados": empleados}
+
+@router.get("/employees/from-minthcm")
+def obtener_empleados_de_minthcm():
+    client = MintHCMClient(
+        base_url="http://localhost:8080",
+        username="admin",
+        password="minthcm"
+    )
+    empleados = client.get_employees()
+    return empleados
