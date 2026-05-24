@@ -21,17 +21,13 @@ def listar_evaluaciones(db: Session = Depends(get_db)):
 
 @router.get("/employees/from-minthcm")
 def obtener_empleados_de_minthcm():
-    return {
-        "mensaje": "Conexion a MintHCM establecida",
-        "sistema": "http://localhost",
-        "empleados_registrados": [
-            {
-                "id": "8c102712-7589-4dfe-96fc-42d48f898477",
-                "nombre": "Administrator",
-                "sistema_origen": "MintHCM"
-            }
-        ]
-    }
+    client = MintHCMClient(
+        base_url="http://localhost",
+        username="admin",
+        password="minthcm"
+    )
+    empleados = client.get_employees()
+    return empleados
 
 @router.get("/{id}", response_model=EvaluationFormOut)
 def obtener_evaluacion(id: int, db: Session = Depends(get_db)):
