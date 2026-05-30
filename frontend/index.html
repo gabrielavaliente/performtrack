@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PerformTrack</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <aside class="sidebar">
     <div class="brand">
@@ -18,19 +21,19 @@
 
     <nav>
       <a href="#" class="nav-link active" data-section="dashboard">
-        <span class="nav-icon">⊞</span> Dashboard
+        <span class="nav-icon">⌂</span> Dashboard
       </a>
       <a href="#" class="nav-link" data-section="evaluaciones">
-        <span class="nav-icon">📋</span> Evaluaciones
+        <span class="nav-icon">☰</span> Evaluaciones
       </a>
       <a href="#" class="nav-link" data-section="okr">
-        <span class="nav-icon">🎯</span> OKRs
+        <span class="nav-icon">◎</span> OKRs
       </a>
       <a href="#" class="nav-link" data-section="kpis">
-        <span class="nav-icon">📊</span> KPIs
+        <span class="nav-icon">▦</span> KPIs
       </a>
       <a href="#" class="nav-link" data-section="reportes">
-        <span class="nav-icon">📄</span> Reportes
+        <span class="nav-icon">◧</span> Reportes
       </a>
     </nav>
   </aside>
@@ -45,26 +48,48 @@
     </header>
 
     <!-- DASHBOARD -->
-    <section id="dashboard" class="section-page active cards">
-      <div class="card">
-        <h3>Evaluaciones</h3>
-        <p id="totalEvaluaciones">0</p>
-        <span>Formularios registrados</span>
+    <section id="dashboard" class="section-page active">
+      <div class="dashboard-welcome">
+        <div class="welcome-text">
+          <h2>Bienvenido a PerformTrack</h2>
+          <p>Gestiona el desempeño de tu equipo desde un solo lugar</p>
+        </div>
+        <span class="badge">Grupo 7</span>
       </div>
-      <div class="card">
-        <h3>OKRs</h3>
-        <p>Activo</p>
-        <span>Objetivos por empleado</span>
-      </div>
-      <div class="card">
-        <h3>KPIs</h3>
-        <p>Auto</p>
-        <span>Cálculo automático</span>
-      </div>
-      <div class="card">
-        <h3>Reportes</h3>
-        <p>PDF/Excel</p>
-        <span>Exportación disponible</span>
+
+      <div class="cards-grid">
+        <div class="card card-evaluaciones">
+          <div class="card-icon">☰</div>
+          <div class="card-info">
+            <h3>Evaluaciones</h3>
+            <p id="totalEvaluaciones">0</p>
+            <span>Formularios registrados</span>
+          </div>
+        </div>
+        <div class="card card-okr">
+          <div class="card-icon">◎</div>
+          <div class="card-info">
+            <h3>OKRs</h3>
+            <p>Activo</p>
+            <span>Objetivos por empleado</span>
+          </div>
+        </div>
+        <div class="card card-kpi">
+          <div class="card-icon">▦</div>
+          <div class="card-info">
+            <h3>KPIs</h3>
+            <p>Auto</p>
+            <span>Cálculo automático</span>
+          </div>
+        </div>
+        <div class="card card-reportes">
+          <div class="card-icon">◧</div>
+          <div class="card-info">
+            <h3>Reportes</h3>
+            <p>PDF/Excel</p>
+            <span>Exportación disponible</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -135,4 +160,5 @@
 
   <script src="/js/app.js"></script>
 </body>
+
 </html>
