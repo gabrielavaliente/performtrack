@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field  
 
 class EvaluationFormCreate(BaseModel):
     nombre: str
@@ -14,11 +14,11 @@ class GoalCreate(BaseModel):
     empleado_id: str
     descripcion: str
     objetivo_okr: str
-    peso: float
+    peso: float = Field(..., ge=0, le=100, description="Peso del objetivo (0-100)")
 
 class GoalOut(GoalCreate):
     id: int
-    progreso: float
+    progreso: float = Field(default=0.0, ge=0, le=100)
     class Config:
         from_attributes = True
 
