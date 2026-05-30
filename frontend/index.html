@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PerformTrack</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">PT</div>
+      <div>
+        <h2>PerformTrack</h2>
+        <p>Módulo para MintHCM</p>
+      </div>
+    </div>
+
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#evaluaciones">Evaluaciones</a>
+      <a href="#okr">OKRs</a>
+      <a href="#kpis">KPIs</a>
+      <a href="#reportes">Reportes</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <h1>Panel de desempeño</h1>
+        <p>Gestión de evaluaciones, OKRs, KPIs y reportes</p>
+      </div>
+      <span class="badge">Grupo 7</span>
+    </header>
+
+    <section id="dashboard" class="cards">
+      <div class="card">
+        <h3>Evaluaciones</h3>
+        <p id="totalEvaluaciones">0</p>
+        <span>Formularios registrados</span>
+      </div>
+
+      <div class="card">
+        <h3>OKRs</h3>
+        <p>Activo</p>
+        <span>Objetivos por empleado</span>
+      </div>
+
+      <div class="card">
+        <h3>KPIs</h3>
+        <p>Auto</p>
+        <span>Cálculo automático</span>
+      </div>
+
+      <div class="card">
+        <h3>Reportes</h3>
+        <p>PDF/Excel</p>
+        <span>Exportación disponible</span>
+      </div>
+    </section>
+
+    <section id="evaluaciones" class="panel">
+      <div class="section-title">
+        <h2>Crear evaluación</h2>
+        <p>Registra formularios de evaluación por período.</p>
+      </div>
+
+      <form id="evaluationForm" class="form-grid">
+        <input type="text" id="nombre" placeholder="Nombre de evaluación" required />
+        <input type="text" id="periodo" placeholder="Período: Q1, Q2, Anual" required />
+        <select id="estado">
+          <option value="activo">Activo</option>
+          <option value="borrador">Borrador</option>
+          <option value="cerrado">Cerrado</option>
+        </select>
+        <button type="submit">Crear evaluación</button>
+      </form>
+
+      <h3>Evaluaciones registradas</h3>
+      <div id="evaluacionesList" class="table-box"></div>
+    </section>
+
+    <section id="okr" class="panel">
+      <div class="section-title">
+        <h2>Crear OKR</h2>
+        <p>Asigna objetivos medibles a empleados.</p>
+      </div>
+
+      <form id="goalForm" class="form-grid">
+        <input type="text" id="empleadoIdGoal" placeholder="ID empleado" required />
+        <input type="text" id="descripcionGoal" placeholder="Descripción del objetivo" required />
+        <input type="number" id="pesoGoal" placeholder="Peso %" required />
+        <button type="submit">Crear OKR</button>
+      </form>
+    </section>
+
+    <section id="kpis" class="panel">
+      <div class="section-title">
+        <h2>Calcular KPI</h2>
+        <p>Calcula automáticamente el porcentaje de cumplimiento.</p>
+      </div>
+
+      <form id="kpiForm" class="form-grid">
+        <input type="text" id="empleadoIdKpi" placeholder="ID empleado" required />
+        <input type="number" id="formIdKpi" placeholder="ID evaluación" required />
+        <input type="text" id="kpiNombre" placeholder="Nombre del KPI" required />
+        <input type="number" id="valorActual" placeholder="Valor actual" required />
+        <input type="number" id="valorMeta" placeholder="Valor meta" required />
+        <button type="submit">Calcular KPI</button>
+      </form>
+
+      <div id="kpiResult" class="result-box"></div>
+    </section>
+
+    <section id="reportes" class="panel">
+      <div class="section-title">
+        <h2>Reportes</h2>
+        <p>Genera reportes por empleado.</p>
+      </div>
+
+      <div class="report-actions">
+        <input type="text" id="empleadoReporte" placeholder="ID empleado" />
+        <button onclick="descargarPDF()">Descargar PDF</button>
+        <button onclick="descargarExcel()">Descargar Excel</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
