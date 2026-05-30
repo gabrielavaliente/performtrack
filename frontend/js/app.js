@@ -1,3 +1,28 @@
+// Navegación entre secciones
+const titles = {
+  dashboard: { title: "Dashboard", subtitle: "Resumen general del sistema" },
+  evaluaciones: { title: "Evaluaciones", subtitle: "Gestiona formularios de evaluación" },
+  okr: { title: "OKRs", subtitle: "Objetivos y resultados clave" },
+  kpis: { title: "KPIs", subtitle: "Indicadores de desempeño" },
+  reportes: { title: "Reportes", subtitle: "Genera reportes por empleado" }
+};
+
+document.querySelectorAll(".nav-link").forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const section = link.dataset.section;
+
+    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+    document.querySelectorAll(".section-page").forEach(s => s.classList.remove("active"));
+
+    link.classList.add("active");
+    document.getElementById(section).classList.add("active");
+
+    document.getElementById("page-title").textContent = titles[section].title;
+    document.getElementById("page-subtitle").textContent = titles[section].subtitle;
+  });
+});
+
 const API = "";
 
 async function cargarEvaluaciones() {
