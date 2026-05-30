@@ -386,6 +386,24 @@ nav {
   background: #228a5e;
 }
 
+.btn-primary,
+.btn-update-progreso {
+  padding: 8px 14px;
+  background: #2B9E6F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-primary:hover,
+.btn-update-progreso:hover {
+  background: #228a5e;
+}
+
 /* RESULTADO KPI */
 .result-box {
   display: none;

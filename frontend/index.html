@@ -125,6 +125,14 @@
         <input type="number" id="pesoGoal" placeholder="Peso %" required />
         <button type="submit">Crear OKR</button>
       </form>
+      <div class="section-subpanel">
+        <div class="form-grid">
+          <input type="text" id="empleadoBuscar" placeholder="ID empleado para ver objetivos" />
+          <button id="buscarObjetivosBtn">Buscar objetivos</button>
+        </div>
+        <h3>Objetivos del empleado</h3>
+        <div id="goalsList" class="table-box"></div>
+      </div>
     </section>
 
     <!-- KPIS -->
@@ -142,6 +150,14 @@
         <button type="submit">Calcular KPI</button>
       </form>
       <div id="kpiResult" class="result-box"></div>
+      <div class="section-subpanel">
+        <div class="form-grid">
+          <input type="text" id="empleadoBuscarKpi" placeholder="ID empleado para ver KPIs" />
+          <button id="buscarKpisBtn" class="btn-primary">Buscar KPIs</button>
+        </div>
+        <h3>KPI del empleado</h3>
+        <div id="kpisList" class="table-box"></div>
+      </div>
     </section>
 
     <!-- REPORTES -->
