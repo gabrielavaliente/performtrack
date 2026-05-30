@@ -17,42 +17,50 @@
     </div>
 
     <nav>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#evaluaciones">Evaluaciones</a>
-      <a href="#okr">OKRs</a>
-      <a href="#kpis">KPIs</a>
-      <a href="#reportes">Reportes</a>
+      <a href="#" class="nav-link active" data-section="dashboard">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a>
+      <a href="#" class="nav-link" data-section="evaluaciones">
+        <span class="nav-icon">📋</span> Evaluaciones
+      </a>
+      <a href="#" class="nav-link" data-section="okr">
+        <span class="nav-icon">🎯</span> OKRs
+      </a>
+      <a href="#" class="nav-link" data-section="kpis">
+        <span class="nav-icon">📊</span> KPIs
+      </a>
+      <a href="#" class="nav-link" data-section="reportes">
+        <span class="nav-icon">📄</span> Reportes
+      </a>
     </nav>
   </aside>
 
   <main class="content">
     <header class="topbar">
       <div>
-        <h1>Panel de desempeño</h1>
-        <p>Gestión de evaluaciones, OKRs, KPIs y reportes</p>
+        <h1 id="page-title">Dashboard</h1>
+        <p id="page-subtitle">Resumen general del sistema</p>
       </div>
       <span class="badge">Grupo 7</span>
     </header>
 
-    <section id="dashboard" class="cards">
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section-page active cards">
       <div class="card">
         <h3>Evaluaciones</h3>
         <p id="totalEvaluaciones">0</p>
         <span>Formularios registrados</span>
       </div>
-
       <div class="card">
         <h3>OKRs</h3>
         <p>Activo</p>
         <span>Objetivos por empleado</span>
       </div>
-
       <div class="card">
         <h3>KPIs</h3>
         <p>Auto</p>
         <span>Cálculo automático</span>
       </div>
-
       <div class="card">
         <h3>Reportes</h3>
         <p>PDF/Excel</p>
@@ -60,12 +68,12 @@
       </div>
     </section>
 
-    <section id="evaluaciones" class="panel">
+    <!-- EVALUACIONES -->
+    <section id="evaluaciones" class="section-page panel">
       <div class="section-title">
         <h2>Crear evaluación</h2>
         <p>Registra formularios de evaluación por período.</p>
       </div>
-
       <form id="evaluationForm" class="form-grid">
         <input type="text" id="nombre" placeholder="Nombre de evaluación" required />
         <input type="text" id="periodo" placeholder="Período: Q1, Q2, Anual" required />
@@ -76,17 +84,16 @@
         </select>
         <button type="submit">Crear evaluación</button>
       </form>
-
       <h3>Evaluaciones registradas</h3>
       <div id="evaluacionesList" class="table-box"></div>
     </section>
 
-    <section id="okr" class="panel">
+    <!-- OKR -->
+    <section id="okr" class="section-page panel">
       <div class="section-title">
         <h2>Crear OKR</h2>
         <p>Asigna objetivos medibles a empleados.</p>
       </div>
-
       <form id="goalForm" class="form-grid">
         <input type="text" id="empleadoIdGoal" placeholder="ID empleado" required />
         <input type="text" id="descripcionGoal" placeholder="Descripción del objetivo" required />
@@ -95,12 +102,12 @@
       </form>
     </section>
 
-    <section id="kpis" class="panel">
+    <!-- KPIS -->
+    <section id="kpis" class="section-page panel">
       <div class="section-title">
         <h2>Calcular KPI</h2>
         <p>Calcula automáticamente el porcentaje de cumplimiento.</p>
       </div>
-
       <form id="kpiForm" class="form-grid">
         <input type="text" id="empleadoIdKpi" placeholder="ID empleado" required />
         <input type="number" id="formIdKpi" placeholder="ID evaluación" required />
@@ -109,16 +116,15 @@
         <input type="number" id="valorMeta" placeholder="Valor meta" required />
         <button type="submit">Calcular KPI</button>
       </form>
-
       <div id="kpiResult" class="result-box"></div>
     </section>
 
-    <section id="reportes" class="panel">
+    <!-- REPORTES -->
+    <section id="reportes" class="section-page panel">
       <div class="section-title">
         <h2>Reportes</h2>
         <p>Genera reportes por empleado.</p>
       </div>
-
       <div class="report-actions">
         <input type="text" id="empleadoReporte" placeholder="ID empleado" />
         <button onclick="descargarPDF()">Descargar PDF</button>
