@@ -113,27 +113,30 @@
       <div id="evaluacionesList" class="table-box"></div>
     </section>
 
-    <!-- OKR -->
-    <section id="okr" class="section-page panel">
-      <div class="section-title">
-        <h2>Crear OKR</h2>
-        <p>Asigna objetivos medibles a empleados.</p>
-      </div>
-      <form id="goalForm" class="form-grid">
-        <input type="text" id="empleadoIdGoal" placeholder="ID empleado" required />
-        <input type="text" id="descripcionGoal" placeholder="Descripción del objetivo" required />
-        <input type="number" id="pesoGoal" placeholder="Peso %" required />
-        <button type="submit">Crear OKR</button>
-      </form>
-      <div class="section-subpanel">
-        <div class="form-grid">
-          <input type="text" id="empleadoBuscar" placeholder="ID empleado para ver objetivos" />
-          <button id="buscarObjetivosBtn">Buscar objetivos</button>
-        </div>
-        <h3>Objetivos del empleado</h3>
-        <div id="goalsList" class="table-box"></div>
-      </div>
-    </section>
+<!-- OKR -->
+<section id="okr" class="section-page panel">
+  <div class="section-title">
+    <h2>Crear OKR</h2>
+    <p>Asigna objetivos medibles a empleados.</p>
+  </div>
+  <form id="goalForm" class="form-grid">
+    <input type="text" id="empleadoIdGoal" placeholder="ID empleado" required />
+    <input type="text" id="descripcionGoal" placeholder="Descripción del objetivo" required />
+    <input type="number" id="pesoGoal" placeholder="Peso %" required />
+    <button type="submit">Crear OKR</button>
+  </form>
+  <div id="goalFormMsg" class="form-message"></div>  <!-- ← NUEVO -->
+
+  <div class="section-subpanel">
+    <div class="form-grid">
+      <input type="text" id="empleadoBuscar" placeholder="ID empleado para ver objetivos" />
+      <button id="buscarObjetivosBtn">Buscar objetivos</button>
+    </div>
+    <h3>Objetivos del empleado</h3>
+    <div id="goalsList" class="table-box"></div>
+    <div id="goalUpdateMsg" class="form-message"></div>  <!-- ← NUEVO -->
+  </div>
+</section>
 
     <!-- KPIS -->
     <section id="kpis" class="section-page panel">

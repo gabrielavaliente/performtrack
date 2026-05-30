@@ -86,8 +86,25 @@ document.getElementById("evaluationForm").addEventListener("submit", async (e) =
   cargarEvaluaciones();
 });
 
+function mostrarMensajeOKR(elementId, tipo, texto) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = texto;
+  el.className = `form-message ${tipo} visible`;
+  setTimeout(() => {
+    el.className = 'form-message';
+  }, 4000);
+}
+
 document.getElementById("goalForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  const pesoVal = Number(document.getElementById("pesoGoal").value);
+
+  if (pesoVal < 0 || pesoVal > 100) {
+    mostrarMensajeOKR("goalFormMsg", "error", "El peso debe estar entre 0 y 100.");
+    return;
+  }
 
   const descripcion = document.getElementById("descripcionGoal").value;
 
@@ -95,22 +112,30 @@ document.getElementById("goalForm").addEventListener("submit", async (e) => {
     empleado_id: document.getElementById("empleadoIdGoal").value,
     descripcion: descripcion,
     objetivo_okr: descripcion,
-    peso: Number(document.getElementById("pesoGoal").value)
+    peso: pesoVal
   };
 
-  const res = await fetch(`${API}/goals/`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload)
-  });
+  try {
+    const res = await fetch(`${API}/goals/`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
 
-  if (!res.ok) {
-    alert("Error al crear OKR");
-    return;
+    if (!res.ok) {
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail?.[0]?.msg || errData?.detail || "Error al crear OKR.";
+      mostrarMensajeOKR("goalFormMsg", "error", detalle);
+      return;
+    }
+
+    mostrarMensajeOKR("goalFormMsg", "success", "OKR creado correctamente.");
+    e.target.reset();
+
+  } catch (err) {
+    mostrarMensajeOKR("goalFormMsg", "error", "Error de red. Verifica tu conexión.");
+    console.error(err);
   }
-
-  alert("OKR creado correctamente");
-  e.target.reset();
 });
 
 document.getElementById("kpiForm").addEventListener("submit", async (e) => {
@@ -230,23 +255,32 @@ async function cargarObjetivosEmpleado(employeeId) {
 }
 
 async function actualizarProgreso(id, progreso) {
+  const val = Number(progreso);
+
+  if (val < 0 || val > 100) {
+    mostrarMensajeOKR("goalUpdateMsg", "error", "El progreso debe estar entre 0 y 100.");
+    return;
+  }
+
   try {
-    const res = await fetch(`${API}/goals/${id}/progress?progreso=${encodeURIComponent(progreso)}`, {
+    const res = await fetch(`${API}/goals/${id}/progress?progreso=${encodeURIComponent(val)}`, {
       method: 'PUT'
     });
 
     if (!res.ok) {
-      alert('Error al actualizar progreso');
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail || "Error al actualizar progreso.";
+      mostrarMensajeOKR("goalUpdateMsg", "error", detalle);
       return;
     }
 
-    const text = await res.text();
-    alert('Progreso actualizado');
-    // Optionally refresh the list if the empleado id is in the search input
+    mostrarMensajeOKR("goalUpdateMsg", "success", "Progreso actualizado correctamente.");
+
     const empleadoId = document.getElementById('empleadoBuscar').value;
     if (empleadoId) cargarObjetivosEmpleado(empleadoId);
+
   } catch (err) {
-    alert('Error de red al actualizar progreso');
+    mostrarMensajeOKR("goalUpdateMsg", "error", "Error de red al actualizar progreso.");
     console.error(err);
   }
 }
@@ -256,7 +290,7 @@ document.getElementById('buscarObjetivosBtn').addEventListener('click', (e) => {
   e.preventDefault();
   const id = document.getElementById('empleadoBuscar').value;
   if (!id) {
-    alert('Ingresa el ID del empleado');
+    mostrarMensajeOKR("goalUpdateMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
   cargarObjetivosEmpleado(id);
