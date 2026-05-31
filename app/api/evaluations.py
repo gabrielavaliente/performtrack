@@ -27,16 +27,31 @@ def obtener_empleados_de_minthcm():
         username=MINTHCM_USERNAME,
         password=MINTHCM_PASSWORD
     )
-    empleados = client.get_employees()
-    return empleados
+    return client.get_employees()
+
+@router.get("/departments/from-minthcm")
+def obtener_departamentos_de_minthcm():
+    client = MintHCMClient(
+        base_url=MINTHCM_BASE_URL,
+        username=MINTHCM_USERNAME,
+        password=MINTHCM_PASSWORD
+    )
+    return client.get_departments()
+
+@router.get("/positions/from-minthcm")
+def obtener_cargos_de_minthcm():
+    client = MintHCMClient(
+        base_url=MINTHCM_BASE_URL,
+        username=MINTHCM_USERNAME,
+        password=MINTHCM_PASSWORD
+    )
+    return client.get_positions()
 
 @router.get("/{id}", response_model=EvaluationFormOut)
 def obtener_evaluacion(id: int, db: Session = Depends(get_db)):
     evaluation = db.query(EvaluationForm).filter(EvaluationForm.id == id).first()
-
     if not evaluation:
         raise HTTPException(status_code=404, detail="Evaluación no encontrada")
-
     return evaluation
 
 @router.put("/{id}/assign")
