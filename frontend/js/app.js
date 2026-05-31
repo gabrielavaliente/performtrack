@@ -71,22 +71,32 @@ document.getElementById("evaluationForm").addEventListener("submit", async (e) =
     estado: document.getElementById("estado").value
   };
 
-  const res = await fetch(`${API}/evaluations/`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload)
-  });
+  try {
+    const res = await fetch(`${API}/evaluations/`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
 
-  if (!res.ok) {
-    alert("Error al crear evaluación");
-    return;
+    if (!res.ok) {
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail || "Error al crear evaluación.";
+      mostrarMensaje("evaluationFormMsg", "error", detalle);
+      return;
+    }
+
+    mostrarMensaje("evaluationFormMsg", "success", "Evaluación creada correctamente.");
+    e.target.reset();
+    cargarEvaluaciones();
+
+  } catch (err) {
+    mostrarMensaje("evaluationFormMsg", "error", "Error de red. Verifica tu conexión.");
+    console.error(err);
   }
-
-  e.target.reset();
-  cargarEvaluaciones();
 });
 
-function mostrarMensajeOKR(elementId, tipo, texto) {
+// mensajes de éxito/error
+function mostrarMensaje(elementId, tipo, texto) {
   const el = document.getElementById(elementId);
   if (!el) return;
   el.textContent = texto;
@@ -94,6 +104,10 @@ function mostrarMensajeOKR(elementId, tipo, texto) {
   setTimeout(() => {
     el.className = 'form-message';
   }, 4000);
+}
+
+function mostrarMensajeOKR(elementId, tipo, texto) {
+  mostrarMensaje(elementId, tipo, texto);
 }
 
 document.getElementById("goalForm").addEventListener("submit", async (e) => {
@@ -138,6 +152,7 @@ document.getElementById("goalForm").addEventListener("submit", async (e) => {
   }
 });
 
+// formulario de KPI
 document.getElementById("kpiForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -149,49 +164,56 @@ document.getElementById("kpiForm").addEventListener("submit", async (e) => {
     valor_meta: Number(document.getElementById("valorMeta").value)
   };
 
-  const res = await fetch(`${API}/kpis/calculate`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload)
-  });
+  try {
+    const res = await fetch(`${API}/kpis/calculate`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
 
-  if (!res.ok) {
-    alert("Error al calcular KPI");
-    return;
+    if (!res.ok) {
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail || "Error al calcular KPI.";
+      mostrarMensaje("kpiFormMsg", "error", detalle);
+      return;
+    }
+
+    const data = await res.json();
+    const box = document.getElementById("kpiResult");
+    box.classList.add("visible");
+    document.getElementById("kpiResultValue").textContent = `${data.porcentaje}%`;
+
+    mostrarMensaje("kpiFormMsg", "success", "KPI calculado correctamente.");
+    e.target.reset();
+
+  } catch (err) {
+    mostrarMensaje("kpiFormMsg", "error", "Error de red. Verifica tu conexión.");
+    console.error(err);
   }
-
-  const data = await res.json();
-
-  const box = document.getElementById("kpiResult");
-  box.style.display = "block";
-  box.textContent = `KPI calculado: ${data.porcentaje}% de cumplimiento`;
-
-  e.target.reset();
 });
 
+// generación de reportes
 function descargarPDF() {
   const id = document.getElementById("empleadoReporte").value;
   if (!id) {
-    alert("Ingresa el ID del empleado");
+    mostrarMensaje("reporteMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
-
   window.open(`${API}/reports/pdf/${id}`, "_blank");
 }
 
 function descargarExcel() {
   const id = document.getElementById("empleadoReporte").value;
   if (!id) {
-    alert("Ingresa el ID del empleado");
+    mostrarMensaje("reporteMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
-
   window.open(`${API}/reports/excel/${id}`, "_blank");
 }
 
 cargarEvaluaciones();
 
-// OKR: listar objetivos por empleado
+// listar objetivos por empleado
 async function cargarObjetivosEmpleado(employeeId) {
   try {
     const res = await fetch(`${API}/goals/employee/${encodeURIComponent(employeeId)}`);
@@ -239,7 +261,6 @@ async function cargarObjetivosEmpleado(employeeId) {
 
     document.getElementById("goalsList").innerHTML = html;
 
-    // attach listeners to update buttons
     document.querySelectorAll('.btn-update-progreso').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const id = btn.dataset.id;
@@ -254,6 +275,7 @@ async function cargarObjetivosEmpleado(employeeId) {
   }
 }
 
+// actualizar progreso de un objetivo
 async function actualizarProgreso(id, progreso) {
   const val = Number(progreso);
 
@@ -296,7 +318,7 @@ document.getElementById('buscarObjetivosBtn').addEventListener('click', (e) => {
   cargarObjetivosEmpleado(id);
 });
 
-// KPIs: listar KPIs por empleado
+// listar KPIs por empleado
 async function cargarKpisEmpleado(employeeId) {
   try {
     const res = await fetch(`${API}/kpis/employee/${encodeURIComponent(employeeId)}`);
@@ -345,11 +367,12 @@ async function cargarKpisEmpleado(employeeId) {
   }
 }
 
+// buscar KPIs por empleado
 document.getElementById('buscarKpisBtn').addEventListener('click', (e) => {
   e.preventDefault();
   const id = document.getElementById('empleadoBuscarKpi').value;
   if (!id) {
-    alert('Ingresa el ID del empleado');
+    mostrarMensaje("kpiSearchMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
   cargarKpisEmpleado(id);
