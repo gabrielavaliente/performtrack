@@ -60,3 +60,57 @@ class MintHCMClient:
             return response.json()
         except Exception as e:
             return {"error": str(e)}
+
+    def get_departments(self):
+        try:
+            rest_data = json.dumps({
+                "session": self.session_id,
+                "module_name": "SecurityGroups",
+                "query": "",
+                "order_by": "",
+                "offset": 0,
+                "select_fields": ["id", "name", "description"],
+                "link_name_to_fields_array": [],
+                "max_results": 50,
+                "deleted": 0
+            })
+            response = httpx.post(
+                self.api_url,
+                data={
+                    "method": "get_entry_list",
+                    "input_type": "JSON",
+                    "response_type": "JSON",
+                    "rest_data": rest_data
+                },
+                timeout=10.0
+            )
+            return response.json()
+        except Exception as e:
+            return {"error": str(e)}
+
+    def get_positions(self):
+        try:
+            rest_data = json.dumps({
+                "session": self.session_id,
+                "module_name": "Positions",
+                "query": "",
+                "order_by": "",
+                "offset": 0,
+                "select_fields": ["id", "name"],
+                "link_name_to_fields_array": [],
+                "max_results": 50,
+                "deleted": 0
+            })
+            response = httpx.post(
+                self.api_url,
+                data={
+                    "method": "get_entry_list",
+                    "input_type": "JSON",
+                    "response_type": "JSON",
+                    "rest_data": rest_data
+                },
+                timeout=10.0
+            )
+            return response.json()
+        except Exception as e:
+            return {"error": str(e)}
