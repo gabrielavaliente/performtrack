@@ -47,7 +47,7 @@
       <span class="badge">Grupo 7</span>
     </header>
 
-    <!-- DASHBOARD -->
+    <!-- Dashboard -->
     <section id="dashboard" class="section-page active">
       <div class="dashboard-welcome">
         <div class="welcome-text">
@@ -93,7 +93,7 @@
       </div>
     </section>
 
-    <!-- EVALUACIONES -->
+    <!-- Evaluaciones -->
     <section id="evaluaciones" class="section-page panel">
       <div class="section-title">
         <h2>Crear evaluación</h2>
@@ -109,34 +109,35 @@
         </select>
         <button type="submit">Crear evaluación</button>
       </form>
+      <div id="evaluationFormMsg" class="form-message"></div>
       <h3>Evaluaciones registradas</h3>
       <div id="evaluacionesList" class="table-box"></div>
     </section>
 
-<!-- OKR -->
-<section id="okr" class="section-page panel">
-  <div class="section-title">
-    <h2>Crear OKR</h2>
-    <p>Asigna objetivos medibles a empleados.</p>
-  </div>
-  <form id="goalForm" class="form-grid">
-    <input type="text" id="empleadoIdGoal" placeholder="ID empleado" required />
-    <input type="text" id="descripcionGoal" placeholder="Descripción del objetivo" required />
-    <input type="number" id="pesoGoal" placeholder="Peso %" required />
-    <button type="submit">Crear OKR</button>
-  </form>
-  <div id="goalFormMsg" class="form-message"></div>  <!-- ← NUEVO -->
+    <!-- OKR -->
+    <section id="okr" class="section-page panel">
+      <div class="section-title">
+        <h2>Crear OKR</h2>
+        <p>Asigna objetivos medibles a empleados.</p>
+      </div>
+      <form id="goalForm" class="form-grid">
+        <input type="text" id="empleadoIdGoal" placeholder="ID empleado" required />
+        <input type="text" id="descripcionGoal" placeholder="Descripción del objetivo" required />
+        <input type="number" id="pesoGoal" placeholder="Peso %" required />
+        <button type="submit">Crear OKR</button>
+      </form>
+      <div id="goalFormMsg" class="form-message"></div>
 
-  <div class="section-subpanel">
-    <div class="form-grid">
-      <input type="text" id="empleadoBuscar" placeholder="ID empleado para ver objetivos" />
-      <button id="buscarObjetivosBtn">Buscar objetivos</button>
-    </div>
-    <h3>Objetivos del empleado</h3>
-    <div id="goalsList" class="table-box"></div>
-    <div id="goalUpdateMsg" class="form-message"></div>  <!-- ← NUEVO -->
-  </div>
-</section>
+      <div class="section-subpanel">
+        <div class="form-grid">
+          <input type="text" id="empleadoBuscar" placeholder="ID empleado para ver objetivos" />
+          <button id="buscarObjetivosBtn">Buscar objetivos</button>
+        </div>
+        <h3>Objetivos del empleado</h3>
+        <div id="goalsList" class="table-box"></div>
+        <div id="goalUpdateMsg" class="form-message"></div>
+      </div>
+    </section>
 
     <!-- KPIS -->
     <section id="kpis" class="section-page panel">
@@ -152,7 +153,15 @@
         <input type="number" id="valorMeta" placeholder="Valor meta" required />
         <button type="submit">Calcular KPI</button>
       </form>
-      <div id="kpiResult" class="result-box"></div>
+      <div id="kpiFormMsg" class="form-message"></div>
+      <div id="kpiResult" class="kpi-result-card">
+        <div class="kpi-result-icon">▦</div>
+        <div class="kpi-result-info">
+          <span class="kpi-result-label">Cumplimiento calculado</span>
+          <p class="kpi-result-value" id="kpiResultValue">0%</p>
+        </div>
+      </div>
+
       <div class="section-subpanel">
         <div class="form-grid">
           <input type="text" id="empleadoBuscarKpi" placeholder="ID empleado para ver KPIs" />
@@ -160,10 +169,11 @@
         </div>
         <h3>KPI del empleado</h3>
         <div id="kpisList" class="table-box"></div>
+        <div id="kpiSearchMsg" class="form-message"></div>
       </div>
     </section>
 
-    <!-- REPORTES -->
+    <!-- Reportes -->
     <section id="reportes" class="section-page panel">
       <div class="section-title">
         <h2>Reportes</h2>
@@ -174,6 +184,7 @@
         <button onclick="descargarPDF()">Descargar PDF</button>
         <button onclick="descargarExcel()">Descargar Excel</button>
       </div>
+      <div id="reporteMsg" class="form-message"></div>
     </section>
   </main>
 
