@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db, EmployeeGoal
 from app.models.schemas import GoalCreate, GoalOut
@@ -21,6 +21,15 @@ def objetivos_empleado(employee_id: str, db: Session = Depends(get_db)):
 @router.put("/{id}/progress")
 def actualizar_progreso(id: int, progreso: float, db: Session = Depends(get_db)):
     goal = db.query(EmployeeGoal).filter(EmployeeGoal.id == id).first()
+
+    if not goal:
+        raise HTTPException(status_code=404, detail="Objetivo no encontrado")
+
+    if progreso < 0 or progreso > 100:
+        raise HTTPException(status_code=400, detail="El progreso debe estar entre 0 y 100")
+
     goal.progreso = progreso
     db.commit()
+    db.refresh(goal)
+
     return {"mensaje": "Progreso actualizado", "progreso": progreso}

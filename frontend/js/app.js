@@ -71,23 +71,54 @@ document.getElementById("evaluationForm").addEventListener("submit", async (e) =
     estado: document.getElementById("estado").value
   };
 
-  const res = await fetch(`${API}/evaluations/`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload)
-  });
+  try {
+    const res = await fetch(`${API}/evaluations/`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
 
-  if (!res.ok) {
-    alert("Error al crear evaluación");
-    return;
+    if (!res.ok) {
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail || "Error al crear evaluación.";
+      mostrarMensaje("evaluationFormMsg", "error", detalle);
+      return;
+    }
+
+    mostrarMensaje("evaluationFormMsg", "success", "Evaluación creada correctamente.");
+    e.target.reset();
+    cargarEvaluaciones();
+
+  } catch (err) {
+    mostrarMensaje("evaluationFormMsg", "error", "Error de red. Verifica tu conexión.");
+    console.error(err);
   }
-
-  e.target.reset();
-  cargarEvaluaciones();
 });
+
+// mensajes de éxito/error
+function mostrarMensaje(elementId, tipo, texto) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = texto;
+  el.className = `form-message ${tipo} visible`;
+  setTimeout(() => {
+    el.className = 'form-message';
+  }, 4000);
+}
+
+function mostrarMensajeOKR(elementId, tipo, texto) {
+  mostrarMensaje(elementId, tipo, texto);
+}
 
 document.getElementById("goalForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  const pesoVal = Number(document.getElementById("pesoGoal").value);
+
+  if (pesoVal < 0 || pesoVal > 100) {
+    mostrarMensajeOKR("goalFormMsg", "error", "El peso debe estar entre 0 y 100.");
+    return;
+  }
 
   const descripcion = document.getElementById("descripcionGoal").value;
 
@@ -95,24 +126,33 @@ document.getElementById("goalForm").addEventListener("submit", async (e) => {
     empleado_id: document.getElementById("empleadoIdGoal").value,
     descripcion: descripcion,
     objetivo_okr: descripcion,
-    peso: Number(document.getElementById("pesoGoal").value)
+    peso: pesoVal
   };
 
-  const res = await fetch(`${API}/goals/`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload)
-  });
+  try {
+    const res = await fetch(`${API}/goals/`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
 
-  if (!res.ok) {
-    alert("Error al crear OKR");
-    return;
+    if (!res.ok) {
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail?.[0]?.msg || errData?.detail || "Error al crear OKR.";
+      mostrarMensajeOKR("goalFormMsg", "error", detalle);
+      return;
+    }
+
+    mostrarMensajeOKR("goalFormMsg", "success", "OKR creado correctamente.");
+    e.target.reset();
+
+  } catch (err) {
+    mostrarMensajeOKR("goalFormMsg", "error", "Error de red. Verifica tu conexión.");
+    console.error(err);
   }
-
-  alert("OKR creado correctamente");
-  e.target.reset();
 });
 
+// formulario de KPI
 document.getElementById("kpiForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -124,49 +164,56 @@ document.getElementById("kpiForm").addEventListener("submit", async (e) => {
     valor_meta: Number(document.getElementById("valorMeta").value)
   };
 
-  const res = await fetch(`${API}/kpis/calculate`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload)
-  });
+  try {
+    const res = await fetch(`${API}/kpis/calculate`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
 
-  if (!res.ok) {
-    alert("Error al calcular KPI");
-    return;
+    if (!res.ok) {
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail || "Error al calcular KPI.";
+      mostrarMensaje("kpiFormMsg", "error", detalle);
+      return;
+    }
+
+    const data = await res.json();
+    const box = document.getElementById("kpiResult");
+    box.classList.add("visible");
+    document.getElementById("kpiResultValue").textContent = `${data.porcentaje}%`;
+
+    mostrarMensaje("kpiFormMsg", "success", "KPI calculado correctamente.");
+    e.target.reset();
+
+  } catch (err) {
+    mostrarMensaje("kpiFormMsg", "error", "Error de red. Verifica tu conexión.");
+    console.error(err);
   }
-
-  const data = await res.json();
-
-  const box = document.getElementById("kpiResult");
-  box.style.display = "block";
-  box.textContent = `KPI calculado: ${data.porcentaje}% de cumplimiento`;
-
-  e.target.reset();
 });
 
+// generación de reportes
 function descargarPDF() {
   const id = document.getElementById("empleadoReporte").value;
   if (!id) {
-    alert("Ingresa el ID del empleado");
+    mostrarMensaje("reporteMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
-
   window.open(`${API}/reports/pdf/${id}`, "_blank");
 }
 
 function descargarExcel() {
   const id = document.getElementById("empleadoReporte").value;
   if (!id) {
-    alert("Ingresa el ID del empleado");
+    mostrarMensaje("reporteMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
-
   window.open(`${API}/reports/excel/${id}`, "_blank");
 }
 
 cargarEvaluaciones();
 
-// OKR: listar objetivos por empleado
+// listar objetivos por empleado
 async function cargarObjetivosEmpleado(employeeId) {
   try {
     const res = await fetch(`${API}/goals/employee/${encodeURIComponent(employeeId)}`);
@@ -214,7 +261,6 @@ async function cargarObjetivosEmpleado(employeeId) {
 
     document.getElementById("goalsList").innerHTML = html;
 
-    // attach listeners to update buttons
     document.querySelectorAll('.btn-update-progreso').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const id = btn.dataset.id;
@@ -229,24 +275,34 @@ async function cargarObjetivosEmpleado(employeeId) {
   }
 }
 
+// actualizar progreso de un objetivo
 async function actualizarProgreso(id, progreso) {
+  const val = Number(progreso);
+
+  if (val < 0 || val > 100) {
+    mostrarMensajeOKR("goalUpdateMsg", "error", "El progreso debe estar entre 0 y 100.");
+    return;
+  }
+
   try {
-    const res = await fetch(`${API}/goals/${id}/progress?progreso=${encodeURIComponent(progreso)}`, {
+    const res = await fetch(`${API}/goals/${id}/progress?progreso=${encodeURIComponent(val)}`, {
       method: 'PUT'
     });
 
     if (!res.ok) {
-      alert('Error al actualizar progreso');
+      const errData = await res.json().catch(() => null);
+      const detalle = errData?.detail || "Error al actualizar progreso.";
+      mostrarMensajeOKR("goalUpdateMsg", "error", detalle);
       return;
     }
 
-    const text = await res.text();
-    alert('Progreso actualizado');
-    // Optionally refresh the list if the empleado id is in the search input
+    mostrarMensajeOKR("goalUpdateMsg", "success", "Progreso actualizado correctamente.");
+
     const empleadoId = document.getElementById('empleadoBuscar').value;
     if (empleadoId) cargarObjetivosEmpleado(empleadoId);
+
   } catch (err) {
-    alert('Error de red al actualizar progreso');
+    mostrarMensajeOKR("goalUpdateMsg", "error", "Error de red al actualizar progreso.");
     console.error(err);
   }
 }
@@ -256,13 +312,13 @@ document.getElementById('buscarObjetivosBtn').addEventListener('click', (e) => {
   e.preventDefault();
   const id = document.getElementById('empleadoBuscar').value;
   if (!id) {
-    alert('Ingresa el ID del empleado');
+    mostrarMensajeOKR("goalUpdateMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
   cargarObjetivosEmpleado(id);
 });
 
-// KPIs: listar KPIs por empleado
+// listar KPIs por empleado
 async function cargarKpisEmpleado(employeeId) {
   try {
     const res = await fetch(`${API}/kpis/employee/${encodeURIComponent(employeeId)}`);
@@ -311,11 +367,12 @@ async function cargarKpisEmpleado(employeeId) {
   }
 }
 
+// buscar KPIs por empleado
 document.getElementById('buscarKpisBtn').addEventListener('click', (e) => {
   e.preventDefault();
   const id = document.getElementById('empleadoBuscarKpi').value;
   if (!id) {
-    alert('Ingresa el ID del empleado');
+    mostrarMensaje("kpiSearchMsg", "error", "Ingresa el ID del empleado.");
     return;
   }
   cargarKpisEmpleado(id);
