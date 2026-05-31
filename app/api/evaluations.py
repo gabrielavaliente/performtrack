@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db, EvaluationForm
 from app.models.schemas import EvaluationFormCreate, EvaluationFormOut
 from app.services.minthcm import MintHCMClient
+from app.core.config import MINTHCM_BASE_URL, MINTHCM_USERNAME, MINTHCM_PASSWORD
 from typing import List
 
 router = APIRouter()
@@ -22,16 +23,21 @@ def listar_evaluaciones(db: Session = Depends(get_db)):
 @router.get("/employees/from-minthcm")
 def obtener_empleados_de_minthcm():
     client = MintHCMClient(
-        base_url="http://localhost",
-        username="admin",
-        password="minthcm"
+        base_url=MINTHCM_BASE_URL,
+        username=MINTHCM_USERNAME,
+        password=MINTHCM_PASSWORD
     )
     empleados = client.get_employees()
     return empleados
 
 @router.get("/{id}", response_model=EvaluationFormOut)
 def obtener_evaluacion(id: int, db: Session = Depends(get_db)):
-    return db.query(EvaluationForm).filter(EvaluationForm.id == id).first()
+    evaluation = db.query(EvaluationForm).filter(EvaluationForm.id == id).first()
+
+    if not evaluation:
+        raise HTTPException(status_code=404, detail="Evaluación no encontrada")
+
+    return evaluation
 
 @router.put("/{id}/assign")
 def asignar_empleados(id: int, empleados: List[str]):

@@ -219,3 +219,9 @@ __marimo__/
 
 # database
 performtrack.db
+
+.env
+__pycache__/
+*.pyc
+*.db
+reports/
